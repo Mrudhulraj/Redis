@@ -28,7 +28,7 @@ void RedisServer::run(){
     int opt=1;
     setsockopt(server_socket,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
 
-    sockaddr_in serverAddr();
+    sockaddr_in serverAddr;
     serverAddr.sin_family= AF_INET;
     serverAddr.sin_port = htons(port);
     serverAddr.sin_addr.s_addr=INADDR_ANY;
