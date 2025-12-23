@@ -55,6 +55,16 @@ std::string RedisCommandHandler::processCommand(const std::string&commandLine){
     if(tokens.empty()){
         return "Error: Emppty command\r\n";
     }
+    for(auto &t:tokens){
+        std::cout<< t << "\n";
+    }
     std::string cmd = tokens[0];
     std::transform(cmd.begin(),cmd.end(),cmd.begin(),::toupper);
+
+    std::ostringstream response;
+
+    //Connect to DB
+    //Check commands
+
+    return response.str();
 }
