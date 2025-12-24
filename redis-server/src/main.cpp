@@ -16,7 +16,7 @@ int main(int argc,char* argv[]){
         while(true){
             std::this_thread::sleep_for(std::chrono::seconds(300));
             // Dump or sync db
-            if(!RedisDatbase::getInstance().dump("dump.my_rdb")){
+            if(!RedisDatabase::getInstance().dump("dump.my_rdb")){
                 std::cerr<<"Error dumping database\n";
             }
             else{

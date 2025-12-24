@@ -14,7 +14,7 @@ static RedisServer* globalServer = nullptr;
 
 void signalHandler(int signum){
     if(globalServer){
-        std::cout << "Caught signal" << signum << "shutting down ...\n";
+        std::cout << "\nCaught signal " << signum << " shutting down ...\n";
         globalServer->shutdown();
     }
     exit(signum);
@@ -92,7 +92,7 @@ void RedisServer::run(){
     }
     
     //Shutdown
-    if(RedisDatbase::getInstance().dump("dump.my_rdb")){
+    if(RedisDatabase::getInstance().dump("dump.my_rdb")){
         std::cout << "Database dumped before shutdown\n";
     }else{
         std::cerr << "Error dumping db before shutdown\n";

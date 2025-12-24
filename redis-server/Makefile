@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -pthread -MMD -MP -O2
+CXXFLAGS = -g -O0 -std=c++17 -Wall -pthread -MMD -MP -O2
 
 SRC_DIR = src
 BUILD_DIR = build
