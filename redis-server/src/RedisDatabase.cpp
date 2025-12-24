@@ -1,12 +1,78 @@
 #include "../include/RedisDatabase.h"
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
 
 RedisDatabase& RedisDatabase::getInstance(){
     static RedisDatabase instance;
     return instance;
 }
+
+bool RedisDatabase::flushAll(){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    kv_store.clear();
+    list_store.clear();
+    hash_store.clear();
+    return true;
+}
+
+void RedisDatabase::set(const std::string& key, const std::string& value){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    kv_store[key] = value;
+}
+
+std::vector<std::string> RedisDatabase::keys(){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    std::vector<std::string> Result;
+    for(auto pair: kv_store){
+        Result.push_back(pair.first);
+    }
+    return Result;
+}
+
+bool RedisDatabase::get(const std::string& key, const std::string& value){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    auto it = kv_store.find(key);
+    if(it != kv_store.end())
+        return true;
+}
+
+bool RedisDatabase::del(const std::string& key){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    auto it = kv_store.find(key);
+    if(it!= kv_store.end()){
+        kv_store.erase(it);
+        return true;
+    }else return false;
+}
+
+std::string RedisDatabase::type(const std::string& key){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    auto it = kv_store.find(key);
+    if(it!= kv_store.end()){
+        return "string";
+    }
+    return "none";
+}
+
+bool RedisDatabase::expire(const std::string& key, int seconds){
+    return false;
+}
+
+bool RedisDatabase::rename(const std::string& oldkey, const std::string& newKey){
+    std::lock_guard<std::mutex> lock(db_mutex);
+    auto it = kv_store.find(oldkey);
+    if(it != kv_store.end()){
+        kv_store[newKey]=it->second ;  
+        kv_store.erase(it);
+        return true;
+    }else
+    return false;
+}
+
+
+
 
 bool RedisDatabase::dump(const std::string& filename){
     
@@ -67,13 +133,14 @@ bool RedisDatabase::load(const std::string& filename){
             iss >> key;
             std::unordered_map<std::string,std::string> hash;
             std::string pair;
-            while(iss>>pair)
+            while(iss>>pair){
                 auto pos = pair.find(':');
                 if( pos != std::string::npos){
                     std::string field =pair.substr(0,pos);
                     std::string value = pair.substr(pos+1);
                     hash[field]=value;
                 }
+            }
         }
     }
     return true;
