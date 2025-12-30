@@ -2,7 +2,9 @@
 #define CLI_h
 
 #include <string>
+#include <vector>
 #include "RedisClient.h"
+#include "CommandHandler.h"
 
 class CLI{
     public:
