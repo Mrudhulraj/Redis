@@ -7,9 +7,9 @@
 class CommandHandler{
     public:
         static std::vector<std::string> splitArgs(const std::string &input);
-        static std::string buildRESPCommand(const std::vector<std::string> &args);
+        static std::string buildRESPcommand(const std::vector<std::string> &args);
     private:
 
 };
 
-#endif COMMANDHANDLER_H
+#endif

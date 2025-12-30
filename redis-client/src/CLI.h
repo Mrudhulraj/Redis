@@ -1,17 +1,23 @@
 #ifndef CLI_H
-#define CLI_h
+#define CLI_H
 
 #include <string>
-#include <vector>
 #include "RedisClient.h"
 #include "CommandHandler.h"
+#include "ResponseParser.h"
 
-class CLI{
+class CLI {
     public:
-        CLI(const std::string& host, int port);
-        void run();
+        CLI(const std::string &host, int port);
+        void run(const std::vector<std::string>& commandArgs);
+        void executeCommand(const std::vector<std::string>& commandArgs);
+        //handles pub-sub
+        void handleSubscription(const std::vector<std::string>& commandArgs);
+
     private:
-       RedisClient redisClient; 
+        std::string host;
+        int port;
+        RedisClient redisClient;
 };
 
-#endif
+#endif // CLI_H

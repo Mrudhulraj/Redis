@@ -21,7 +21,7 @@ std::vector<std::string> CommandHandler::splitArgs(const std::string &input){
     return tokens;
 }
 
-std::string CommandHandler::buildRESPCommand(const std::vector<std::string>&args){
+std::string CommandHandler::buildRESPcommand(const std::vector<std::string>&args){
     std::ostringstream oss;
     oss << "*" <<args.size() << "\r\n";
 
