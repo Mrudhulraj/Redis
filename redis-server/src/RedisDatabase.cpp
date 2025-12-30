@@ -2,7 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
-
+#include <algorithm>
+#include <iterator>
 
 RedisDatabase& RedisDatabase::getInstance(){
     static RedisDatabase instance;
@@ -31,11 +32,14 @@ std::vector<std::string> RedisDatabase::keys(){
     return Result;
 }
 
-bool RedisDatabase::get(const std::string& key, const std::string& value){
+bool RedisDatabase::get(const std::string& key, std::string& value){
     std::lock_guard<std::mutex> lock(db_mutex);
     auto it = kv_store.find(key);
-    if(it != kv_store.end())
+    if(it != kv_store.end()){
+        value = it->second;
         return true;
+    }
+    return false;
 }
 
 bool RedisDatabase::del(const std::string& key){
@@ -140,6 +144,7 @@ bool RedisDatabase::load(const std::string& filename){
                     std::string value = pair.substr(pos+1);
                     hash[field]=value;
                 }
+                hash_store[key] = hash;
             }
         }
     }
